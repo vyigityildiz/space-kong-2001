@@ -1,5 +1,7 @@
+import pygame as pg
+
 from Obstacle import *
-import Fireball
+import Alien
 
 # Class that specifies the properties of oil drum.
 class AlienSpaceship(Obstacle):

@@ -1,10 +1,11 @@
+import pygame as pg
+
 import Obstacle
-import OilDrum
+import AlienSpaceship
 import Platform
 import Stair
-import Projectile
-import Barrel
-import Fireball
+import Rock
+import Alien
 import Character
 import Player
 import Enemy

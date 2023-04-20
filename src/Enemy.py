@@ -1,5 +1,7 @@
+import pygame as pg
+
 from Character import *
-import Barrel
+import Rock
 
 # Class that specifies the properties of the enemy
 class Enemy(Character):
