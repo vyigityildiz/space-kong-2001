@@ -1,4 +1,5 @@
-import Level
+from Level import Level
+import pygame as pg
 
 class Game():
     def __init__(self) -> None:
@@ -37,8 +38,23 @@ class Game():
     def render(self):
         pass
 
-    def tick_speed(self):
-        pass
+    def tick():
+        pg.init()
+        screen = pg.display.set_mode((960, 720))
+        clock = pg.time.Clock()
+        running = True
+
+        while running:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    running = False
+            
+            screen.fill("blue")
+
+            pg.display.flip()
+            clock.tick(60)
+
+        pg.quit()
 
     def _set_tick_speed(self):
         pass
