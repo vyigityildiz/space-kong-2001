@@ -6,4 +6,6 @@ class Platform(Obstacle):
     def __init__(self, pos, width, height, isOverAStair) -> None:
         super().__init__(pos, width, height, "sprites/platform.png")
         self.isOverAStair = isOverAStair
-        platform_rect = pg.image.load(self.sprite).get_rect()
+
+    def draw(self, screen):
+        screen.blit(self._image, self.pos)
