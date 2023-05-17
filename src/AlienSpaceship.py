@@ -1,5 +1,3 @@
-import pygame as pg
-
 from Obstacle import *
 import Alien
 
@@ -7,3 +5,6 @@ import Alien
 class AlienSpaceship(Obstacle):
     def __init__(self) -> None:
         super().__init__()
+
+    def deploy_alien(self):
+        pass

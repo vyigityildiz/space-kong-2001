@@ -1,5 +1,3 @@
-import pygame as pg
-
 from Character import *
 import Rock
 
@@ -7,3 +5,6 @@ import Rock
 class Enemy(Character):
     def __init__(self) -> None:
         super().__init__()
+
+    def throw_rock(self):
+        pass

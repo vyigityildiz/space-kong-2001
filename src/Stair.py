@@ -1,5 +1,3 @@
-import pygame as pg
-
 from Obstacle import *
 
 # Class that specifies the properties of the stairs.
