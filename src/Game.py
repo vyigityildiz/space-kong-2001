@@ -42,7 +42,8 @@ class Game():
     def tick(self, screen, frame, events):
         for event in events:
             if event.type == pg.KEYDOWN:
-                self.start()
+                if not self.started:
+                    self.start()
 
         if not self.started:
             pg.font.init()
