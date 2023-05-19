@@ -13,7 +13,7 @@ class Character():
         self.state = state
 
     def draw(self, screen, frame):
-        self._imagetemplate = pg.image.load(self.sprites[self.state][frame % (len(self.sprites) + 1)])
+        self._imagetemplate = pg.image.load(self.sprites[self.state][frame % len(self.sprites[self.state])])
         self._image = pg.transform.scale(self._imagetemplate, (self.width, self.height))
         self._rect = self._image.get_rect()
         screen.blit(self._image, (self.x, self.y))
