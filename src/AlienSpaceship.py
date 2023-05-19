@@ -3,8 +3,8 @@ import Alien
 
 # Class that specifies the properties of oil drum.
 class AlienSpaceship(Obstacle):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, pos, width, height) -> None:
+        super().__init__(pos, width, height, "sprites/spaceship.png")
 
     def deploy_alien(self):
         pass

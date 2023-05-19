@@ -11,7 +11,8 @@ from Enemy import Enemy
 # Class that builds and updates the level. Includes the level design, characters, and projectiles. 
 class Level():
     def __init__(self) -> None:
-        self.platforms = [[Platform((55 + 60 * i, 560 - i * 2), 64, 24, True) for i in range(14)], [Platform((55 + 60 * i, 400 + i * 2), 64, 24, True) for i in range(12)], [Platform((179 + 60 * i, 288 - i * 2), 64, 24, True) for i in range(12)], [Platform((55 + 60 * i, 128 + i * 2), 64, 24, True) for i in range(12)]]
+        self.platforms = [[Platform((55 + 60 * i, 610 - i * 2), 64, 24, True) for i in range(14)], [Platform((55 + 60 * i, 450 + i * 2), 64, 24, True) for i in range(12)], [Platform((179 + 60 * i, 338 - i * 2), 64, 24, True) for i in range(12)], [Platform((55 + 60 * i, 178 + i * 2), 64, 24, True) for i in range(12)]]
+        self.spaceship = AlienSpaceship((55, 500), 72, 64)
 
     def isNearStairs(self) -> bool:
         pass
@@ -38,3 +39,4 @@ class Level():
         for floor in self.platforms:
             for platform in floor:
                 platform.draw(screen)
+        self.spaceship.draw(screen)
