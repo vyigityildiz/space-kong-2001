@@ -38,11 +38,10 @@ class Level():
     def control_moving_instances(self):
         pass
 
-    def draw_obstacles(self, screen, frame):
+    def draw_obstacles(self, screen):
         for floor in self.platforms:
             for platform in floor:
                 platform.draw(screen)
-        self.spaceship.draw(screen, frame)
         for stairs in self.stairs:
             for stair in stairs:
                 stair.draw(screen)
@@ -50,3 +49,4 @@ class Level():
     def draw_animated_instances(self, screen, frame):
         self.spacebro.draw(screen, frame)
         self.robot.draw(screen, frame)
+        self.spaceship.draw(screen, frame)

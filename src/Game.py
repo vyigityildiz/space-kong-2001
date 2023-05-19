@@ -39,7 +39,7 @@ class Game():
         pass
 
     def tick(self, screen, frame):
-        self.level.draw_obstacles(screen, frame)
+        self.level.draw_obstacles(screen)
         self.level.draw_animated_instances(screen, frame)
 
     def _set_tick_speed(self):
