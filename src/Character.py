@@ -17,3 +17,8 @@ class Character():
         self._image = pg.transform.scale(self._imagetemplate, (self.width, self.height))
         self._rect = self._image.get_rect()
         screen.blit(self._image, (self.x, self.y))
+
+    def get_position_interval(self):
+        top_left = [self.x, self.y]
+        bottom_right = [self.x + self.width, self.y + self.height]
+        return top_left, bottom_right 

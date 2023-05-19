@@ -15,7 +15,7 @@ while running:
         if event.type == pg.QUIT:
             running = False
             
-    screen.fill("orange") # TODO: after done with level design change the color back to gray6
+    screen.fill("gray6") # TODO: after done with level design change the color back to gray6
 
     game.tick(screen, frame)
 

@@ -9,3 +9,8 @@ class Obstacle():
         self._imagetemplate = pg.image.load(self.sprite)
         self._image = pg.transform.scale(self._imagetemplate, (width, height))
         self._rect = self._image.get_rect()
+
+    def get_position_interval(self):
+        top_left = self.pos
+        bottom_right = [self.pos[0] + self.width, self.pos[1] + self.height]
+        return top_left, bottom_right 
