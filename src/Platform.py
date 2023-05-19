@@ -7,5 +7,6 @@ class Platform(Obstacle):
         super().__init__(pos, width, height, "sprites/platform.png")
         self.isOverAStair = isOverAStair
 
+    # Rendering method
     def draw(self, screen):
         screen.blit(self._image, self.pos)

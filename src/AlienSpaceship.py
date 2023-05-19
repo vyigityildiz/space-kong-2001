@@ -9,5 +9,6 @@ class AlienSpaceship(Obstacle):
     def deploy_alien(self):
         pass
 
+    # Rendering method
     def draw(self, screen):
         screen.blit(self._image, self.pos)
