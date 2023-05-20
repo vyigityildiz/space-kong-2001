@@ -5,6 +5,7 @@ class Game():
     def __init__(self) -> None:
         self.level = Level()
         self.started = False
+        self.score = 0
 
     def climb_down(self):
         pass
@@ -44,6 +45,27 @@ class Game():
             if event.type == pg.KEYDOWN:
                 if not self.started:
                     self.start()
+                # Key press control checks        
+                if event.key == pg.K_LEFT:
+                    pressed_left = True
+                elif event.key == pg.K_RIGHT:
+                    pressed_right = True
+                elif event.key == pg.K_UP:
+                    pressed_up = True
+                elif event.key == pg.K_DOWN:
+                    pressed_down = True
+                if event.key == pg.K_SPACE: # TODO: Change after programming the jump method
+                    self.jump()
+            # Key up control checks
+            elif event.type == pg.KEYUP:
+                if event.key == pg.K_LEFT:
+                    pressed_left = False
+                elif event.key == pg.K_RIGHT:
+                    pressed_right = False
+                elif event.key == pg.K_UP:
+                    pressed_up = False
+                elif event.key == pg.K_DOWN:
+                    pressed_down = False
 
         if not self.started:
             pg.font.init()
