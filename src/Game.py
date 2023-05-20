@@ -21,7 +21,7 @@ class Game():
         pass
 
     def move_left(self):
-        pass
+        self.level.player.move_left()
 
     def move_right(self):
         self.level.isEmpty("right")
@@ -86,6 +86,8 @@ class Game():
         # Moving TODO: Complete for stairs and steps up
         if self.pressed_right:
             self.move_right()
+        if self.pressed_left:
+            self.move_left()
 
         # Rendering
         self.level.draw_obstacles(screen)

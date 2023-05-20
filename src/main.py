@@ -21,10 +21,10 @@ while running:
     game.tick(screen, frame, events)
 
     tick += 1
-    if tick % 8 == 0:
+    if tick % 20 == 0:
         frame += 1
 
     pg.display.flip()
-    clock.tick(24)
+    clock.tick(60)
 
 pg.quit()
