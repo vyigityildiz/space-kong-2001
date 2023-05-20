@@ -21,4 +21,4 @@ class Player(Character):
         pass
 
     def fall(self):
-        self.y += 1
+        self.y += 4

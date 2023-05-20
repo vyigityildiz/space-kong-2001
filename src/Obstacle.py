@@ -12,5 +12,5 @@ class Obstacle():
 
     def get_position_interval(self):
         top_left = self.pos
-        bottom_right = [self.pos[0] + self.width, self.pos[1] + self.height]
+        bottom_right = [self.pos[0] + self.size[0], self.pos[1] + self.size[1]]
         return top_left, bottom_right 

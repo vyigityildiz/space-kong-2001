@@ -16,6 +16,7 @@ class Level():
         self.stairs = [[Stair((355, 580 - 20 * i), 64, 20) for i in range(7)], [Stair((655, 570 - 20 * i), 64, 20) for i in range(6)], [Stair((475, 444 - 20 * i), 64, 20) for i in range(7)], [Stair((175, 434 - 20 * i), 64, 20) for i in range(6)], [Stair((419, 310 - 20 * i), 64, 20) for i in range(7)], [Stair((719, 300 - 20 * i), 64, 20) for i in range(6)], [Stair((235, 84 + 20 * i), 64, 20) for i in range(5)]]
         self.spacebro = Character(310, 36, 36, 48, {"idle": ["sprites/spacebro-1.png", "sprites/spacebro-2.png"]}, "idle")
         self.robot = Enemy(55, 82, 72, 96, {"idle": ["sprites/robot_idle-1.png", "sprites/robot_idle-2.png"]}, "idle")
+        self.player = Player(600, 0, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
 
     def isNearStairs(self) -> bool:
         pass
@@ -38,6 +39,15 @@ class Level():
     def control_moving_instances(self):
         pass
 
+    def is_player_on_platform(self):
+        not_standing = True
+        for platforms in self.platforms:
+            for platform in platforms:
+                if self.player.get_position_interval()[1][1] == platform.get_position_interval()[0][1]: # Player's bottom y value and platform's top y value
+                    if self.player.get_position_interval()[0][0] <= platform.get_position_interval()[1][0] and self.player.get_position_interval()[0][0] >= platform.get_position_interval()[0][0]: # Player x and platform x
+                        not_standing = False
+        return not_standing
+
     def draw_obstacles(self, screen):
         for floor in self.platforms:
             for platform in floor:
@@ -50,3 +60,4 @@ class Level():
         self.spacebro.draw(screen, frame)
         self.robot.draw(screen, frame)
         self.spaceship.draw(screen, frame)
+        self.player.draw(screen, frame)

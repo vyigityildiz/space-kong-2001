@@ -67,6 +67,7 @@ class Game():
                 elif event.key == pg.K_DOWN:
                     pressed_down = False
 
+        # Displaying the starting text
         if not self.started:
             pg.font.init()
             font_to_use = pg.font.SysFont('arial', 50)
@@ -76,6 +77,10 @@ class Game():
         self.level.draw_obstacles(screen)
         if self.started:
             self.level.draw_animated_instances(screen, frame)
+
+        # Checking if the player is in the air if True then player falls
+        if self.level.is_player_on_platform():
+            self.level.player.fall()
 
     def _set_tick_speed(self):
         pass
