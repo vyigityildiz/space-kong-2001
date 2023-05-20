@@ -21,4 +21,4 @@ class Character():
     def get_position_interval(self):
         top_left = [self.x, self.y]
         bottom_right = [self.x + self.width, self.y + self.height]
-        return top_left, bottom_right 
+        return top_left, bottom_right

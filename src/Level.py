@@ -16,7 +16,7 @@ class Level():
         self.stairs = [[Stair((355, 580 - 20 * i), 64, 20) for i in range(7)], [Stair((655, 570 - 20 * i), 64, 20) for i in range(6)], [Stair((475, 444 - 20 * i), 64, 20) for i in range(7)], [Stair((175, 434 - 20 * i), 64, 20) for i in range(6)], [Stair((419, 310 - 20 * i), 64, 20) for i in range(7)], [Stair((719, 300 - 20 * i), 64, 20) for i in range(6)], [Stair((235, 84 + 20 * i), 64, 20) for i in range(5)]]
         self.spacebro = Character(310, 36, 36, 48, {"idle": ["sprites/spacebro-1.png", "sprites/spacebro-2.png"]}, "idle")
         self.robot = Enemy(55, 82, 72, 96, {"idle": ["sprites/robot_idle-1.png", "sprites/robot_idle-2.png"]}, "idle")
-        self.player = Player(600, 0, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
+        self.player = Player(500, 0, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
 
     def isNearStairs(self) -> bool:
         pass
@@ -42,10 +42,12 @@ class Level():
 
     def is_player_not_on_platform(self):
         not_standing = True
+        player_interval = self.player.get_position_interval()
         for platforms in self.platforms:
             for platform in platforms:
-                if self.player.get_position_interval()[1][1] == platform.get_position_interval()[0][1]: # Player's bottom y value and platform's top y value
-                    if self.player.get_position_interval()[0][0] <= platform.get_position_interval()[1][0] and self.player.get_position_interval()[0][0] >= platform.get_position_interval()[0][0]: # Player x and platform x
+                platform_interval = platform.get_position_interval()
+                if player_interval[1][1] == platform_interval[0][1]: # Player's bottom y value and platform's top y value
+                    if player_interval[0][0] <= platform_interval[1][0] and player_interval[1][0] >= platform_interval[0][0]: # Player x and platform x
                         not_standing = False
         return not_standing
 
