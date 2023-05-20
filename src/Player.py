@@ -18,7 +18,7 @@ class Player(Character):
         pass
 
     def move_right(self):
-        pass
+        self.x += 4
 
     def fall(self):
         self.y += 4

@@ -24,8 +24,9 @@ class Level():
     def canJump(self) -> bool:
         pass
 
-    def isEmpty(self) -> bool:
-        pass
+    def isEmpty(self, side: str) -> bool: # TODO: complete
+        if side == "right":
+            self.player.move_right()
 
     def stopAll(self):
         pass

@@ -6,6 +6,10 @@ class Game():
         self.level = Level()
         self.started = False
         self.score = 0
+        self.pressed_right = False
+        self.pressed_left = False
+        self.pressed_down = False
+        self.pressed_up = False
 
     def climb_down(self):
         pass
@@ -20,7 +24,7 @@ class Game():
         pass
 
     def move_right(self):
-        pass
+        self.level.isEmpty("right")
 
     def pause():
         pass
@@ -42,30 +46,31 @@ class Game():
 
     def tick(self, screen, frame, events):
         for event in events:
+            # Starting the game by pressing any key
             if event.type == pg.KEYDOWN:
                 if not self.started:
                     self.start()
                 # Key press control checks        
                 if event.key == pg.K_LEFT:
-                    pressed_left = True
+                    self.pressed_left = True
                 elif event.key == pg.K_RIGHT:
-                    pressed_right = True
+                    self.pressed_right = True
                 elif event.key == pg.K_UP:
-                    pressed_up = True
+                    self.pressed_up = True
                 elif event.key == pg.K_DOWN:
-                    pressed_down = True
+                    self.pressed_down = True
                 if event.key == pg.K_SPACE: # TODO: Change after programming the jump method
                     self.jump()
             # Key up control checks
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_LEFT:
-                    pressed_left = False
+                    self.pressed_left = False
                 elif event.key == pg.K_RIGHT:
-                    pressed_right = False
+                    self.pressed_right = False
                 elif event.key == pg.K_UP:
-                    pressed_up = False
+                    self.pressed_up = False
                 elif event.key == pg.K_DOWN:
-                    pressed_down = False
+                    self.pressed_down = False
 
         # Displaying the starting text
         if not self.started:
@@ -74,6 +79,7 @@ class Game():
             text_surface = font_to_use.render('Press any key to start.', False, (255, 255, 255))
             screen.blit(text_surface, (0,0))
 
+        # Rendering
         self.level.draw_obstacles(screen)
         if self.started:
             self.level.draw_animated_instances(screen, frame)
@@ -81,6 +87,10 @@ class Game():
         # Checking if the player is in the air if True then player falls
         if self.level.is_player_on_platform():
             self.level.player.fall()
+
+        # Moving TODO: Complete for stairs and steps up
+        if self.pressed_right:
+            self.move_right()
 
     def _set_tick_speed(self):
         pass
