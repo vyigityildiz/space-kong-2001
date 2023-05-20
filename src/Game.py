@@ -79,18 +79,18 @@ class Game():
             text_surface = font_to_use.render('Press any key to start.', False, (255, 255, 255))
             screen.blit(text_surface, (0,0))
 
-        # Rendering
-        self.level.draw_obstacles(screen)
-        if self.started:
-            self.level.draw_animated_instances(screen, frame)
-
         # Checking if the player is in the air if True then player falls
-        if self.level.is_player_on_platform():
+        if self.level.is_player_not_on_platform():
             self.level.player.fall()
 
         # Moving TODO: Complete for stairs and steps up
         if self.pressed_right:
             self.move_right()
+
+        # Rendering
+        self.level.draw_obstacles(screen)
+        if self.started:
+            self.level.draw_animated_instances(screen, frame)
 
     def _set_tick_speed(self):
         pass

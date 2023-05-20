@@ -9,7 +9,7 @@ class Character():
         self.height = height
         self.sprites = sprites
         # states are the state the character in such as idle, running, and climbing. If the character is not a
-        # special character like Player it will only have idle state
+        # special character, like Player, it will only have idle state
         self.state = state
 
     def draw(self, screen, frame):

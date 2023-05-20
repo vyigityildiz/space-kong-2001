@@ -40,7 +40,7 @@ class Level():
     def control_moving_instances(self):
         pass
 
-    def is_player_on_platform(self):
+    def is_player_not_on_platform(self):
         not_standing = True
         for platforms in self.platforms:
             for platform in platforms:
