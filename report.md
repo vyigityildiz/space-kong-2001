@@ -7,6 +7,7 @@
 - Brief Explanation of the game
 - Classes
 - Use-cases
+- Collaboration Diagrams
 
 # BRIEF EXPLANATION OF THE GAME
 
@@ -14,7 +15,7 @@ Our game is an example of the platform genre. As a player we act as 'Space Plumb
 
 # Classes
 
-<img src="class_diagrams.png">
+<img src="class_diagramsupdate.png">
 
 ## `Character` Class
 Character class is the building block of every character in the game. These characters are, Space Plumber, Space Gorilla, and Space Brother.
@@ -65,8 +66,55 @@ The Player actor is the user who interacts with the game and has a variety of us
 - Climb up stairs: This use case allows the player to make the Space Plumber move up the stairs. When player actor initiates this use case by pressing the up arrow key, the system will respond by change its position and animating its movements.
 
 The Computer actor is the system that the Player interacts with. The Computer actor performs specific actions as a response to the Player's interactions with the system. The Computer actor has use-cases such as:
-- Score Calculation: This use case allows the Computer to monitor the Player's performance and calculate the number of points earned based on their performance. The computer will continuously update the player's score and, display it on the screen.
-- Tick Speed Control: This use case allows the Computer to adjust the "tick" speed, the rate at which the game logic and graphics are updated. 
 
+- Tick Speed: This use case allows the Computer to adjust the "tick" speed, the rate at which the game logic and graphics are updated. 
 
+# Collaboration Diagrams
+## Use Case 1: Start Game
+<img src="collaboration_diagrams/start_game.png">
 
+* This collaboration diagram explains the use case start game. After the game's initiation level loads and player can start playing.
+
+## Use Case 2: Pause Game
+<img src="collaboration_diagrams/pause_game.png">
+
+* This collaboration diagram explains the pause game use case. After `pause()` method is called everything stops and the game displays the word "Paused".
+
+## Use Case 3: Resume Game
+<img src="collaboration_diagrams/resume_game.png">
+
+* This collaboration diagram explains the pause game use case. After `resume()` method is called everything returns to its previous state and the game stops displaying the word "Paused".
+
+## Use Case 4: Move Left
+<img src="collaboration_diagrams/move_left.png">
+
+* This collaboration diagram explains how the use case "move left" works.
+
+## Use Case 5: Move Right
+<img src="collaboration_diagrams/move_right.png">
+
+* This collaboration diagram explains how the use case "move right" works.
+
+## Use Case 6: Jump
+<img src="collaboration_diagrams/jump.png">
+
+* This collaboration diagram explains how the use case "jump" works.
+
+## Use Case 7: Climb Up
+<img src="collaboration_diagrams/climb_up.png">
+
+* This collaboration diagram explains how the use case "climb up" works.
+
+## Use Case 8: Climb Down
+<img src="collaboration_diagrams/climb_down.png">
+
+* This collaboration diagram explains how the use case "climb down" works.
+
+## Use Case 9: Tick Speed
+<img src="collaboration_diagrams/tick_speed.png">
+
+* This collaboration diagram is for the tick speed" use case. Tick speed controls every operation done by the computer. These operations are as follows:
+
+    * Setting the tick speed to control how fast the game runs.
+    * Controlling the the moving instances, nonplayable characters and the "spaceship" deploying "alien"s.
+    * Calculating the player's score.

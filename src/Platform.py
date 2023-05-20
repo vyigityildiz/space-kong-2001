@@ -1,6 +1,12 @@
 from Obstacle import *
+import pygame as pg
 
 # Class that specifies the properties of platforms.
 class Platform(Obstacle):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, pos, width, height, isOverAStair) -> None:
+        super().__init__(pos, width, height, "sprites/platform.png")
+        self.isOverAStair = isOverAStair
+
+    # Rendering method
+    def draw(self, screen):
+        screen.blit(self._image, self.pos)
