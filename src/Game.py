@@ -8,7 +8,6 @@ class Game():
         self.score = 0
         self.pressed_right = False
         self.pressed_left = False
-        self.pressed_down = False
         self.pressed_up = False
         self.jumping = False
 
@@ -59,7 +58,6 @@ class Game():
                 elif event.key == pg.K_UP:
                     self.pressed_up = True
                 elif event.key == pg.K_DOWN:
-                    self.pressed_down = True
                     self.climb_down()
                 if event.key == pg.K_SPACE: # TODO: Change after programming the jump method
                     if not self.level.is_not_on_platform(self.level.player):
@@ -73,8 +71,6 @@ class Game():
                     self.pressed_right = False
                 elif event.key == pg.K_UP:
                     self.pressed_up = False
-                elif event.key == pg.K_DOWN:
-                    self.pressed_down = False
 
         # Displaying the starting text
         if not self.started:
@@ -102,7 +98,8 @@ class Game():
             if tick - self.jump_tick == 58:
                 self.jumping = False
         
-        self.level.control_moving_instances()
+        if self.started:
+            self.level.control_moving_instances()
 
         # Rendering
         self.level.draw_obstacles(screen)

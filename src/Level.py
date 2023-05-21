@@ -17,7 +17,7 @@ class Level():
         self.spacebro = Character(310, 36, 36, 48, {"idle": ["sprites/spacebro-1.png", "sprites/spacebro-2.png"]}, "idle")
         self.robot = Enemy(55, 82, 72, 96, {"idle": ["sprites/robot_idle-1.png", "sprites/robot_idle-2.png"]}, "idle")
         self.player = Player(200, 552, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
-        self.rocks = [Rock(200, 130, 24, 24)]
+        self.rocks = []
 
     # TODO: Fix climbing down
     def isNearStairs(self, direction: str) -> bool:
@@ -77,9 +77,13 @@ class Level():
             rock_interval = rock.get_position_interval()
             if (rock_interval[1][1] >= 450 and rock_interval[1][1] <= 485) or (rock_interval[1][1] >= 178 and rock_interval[1][1] <= 213):
                 rock.move("right")
-                return
             elif (rock_interval[1][1] >= 585 and rock_interval[1][1] <= 620) or (rock_interval[1][1] >= 303 and rock_interval[1][1] <= 348):
                 rock.move("left")
+
+        # Rock throwing
+        throw = self.robot.throw_rock()
+        if throw[0]:
+            self.rocks.append(throw[1])
 
     def rock_falling(self):
         for rock in self.rocks:
