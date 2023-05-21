@@ -18,7 +18,7 @@ while running:
             
     screen.fill("gray6") # TODO: after done with level design change the color back to gray6
 
-    game.tick(screen, frame, events)
+    game.tick(screen, frame, events, tick)
 
     tick += 1
     if tick % 64 == 0:

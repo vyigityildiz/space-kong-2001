@@ -12,7 +12,7 @@ class Player(Character):
         self.y -= 2
 
     def jump(self):
-        pass
+        self.y -= 2
 
     def move_left(self):
         self.x -= 1
