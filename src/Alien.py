@@ -9,11 +9,23 @@ class Alien():
         self.height = height
         self.sprites = ["sprites/alien-1.png", "sprites/alien-2.png"]
 
-    def move(self):
-        pass
+    def move_right(self):
+        self.x += 1
+
+    def move_left(self):
+        self.x -= 1
 
     def fall(self):
         self.y += 1
+
+    def climb_up(self):
+        self.y += 2
+    
+    def climb_down(self):
+        self.fall()
+
+    def move_up_platforms(self):
+        self.y -= 2
 
     def draw(self, screen, frame):
         self._imagetemplate = pg.image.load(self.sprites[frame % len(self.sprites)])

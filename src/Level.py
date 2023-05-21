@@ -47,8 +47,8 @@ class Level():
                     platform_interval = platform.get_position_interval()
                     if who_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
                         if who_interval[1][0] + 1 == platform_interval[0][0]: # Player x and platform x
-                            self.player.move_up_platforms()
-            self.player.move_right()
+                            who.move_up_platforms()
+            who.move_right()
         elif side == "left":
             who_interval = who.get_position_interval()
             for platforms in self.platforms:
@@ -56,8 +56,8 @@ class Level():
                     platform_interval = platform.get_position_interval()
                     if who_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
                         if who_interval[0][0] + 1 == platform_interval[1][0]: # Player x and platform x
-                            self.player.move_up_platforms()
-            self.player.move_left()
+                            who.move_up_platforms()
+            who.move_left()
 
     def stopAll(self):
         pass
@@ -65,6 +65,7 @@ class Level():
     def resumeAll(self):
         pass
 
+    # Rock and alien movements and deployments
     def control_moving_instances(self):
         # Rock rolling
         for rock in self.rocks:
@@ -79,7 +80,12 @@ class Level():
         if throw[0]:
             self.rocks.append(throw[1])
 
-        # TODO: Alien Moving
+        # TODO: Alien Moving including stairs
+
+        # Alien Deploying
+        deploy = self.spaceship.deploy_alien()
+        if deploy[0] and len(self.aliens) <= 20:
+            self.aliens.append(deploy[1])
 
     def object_falling(self):
         for rock in self.rocks:
@@ -100,6 +106,8 @@ class Level():
                         return False
         return True
 
+    # Cumulative rendering method for static obstacle objects to call in the tick method in Game object
+    # Static and animated object rendering is not done in the same method to avoid rendering animated objects before starting the game.
     def draw_obstacles(self, screen):
         for floor in self.platforms:
             for platform in floor:
@@ -108,6 +116,7 @@ class Level():
             for stair in stairs:
                 stair.draw(screen)
     
+    # Drawing of the animated objects
     def draw_animated_instances(self, screen, frame):
         self.spacebro.draw(screen, frame)
         self.robot.draw(screen, frame)

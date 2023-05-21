@@ -41,9 +41,6 @@ class Game():
     def start(self):
         self.started = True
 
-    def render(self):
-        pass
-
     def tick(self, screen, frame, events, tick):
         for event in events:
             # Starting the game by pressing any key
