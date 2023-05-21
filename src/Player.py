@@ -15,10 +15,10 @@ class Player(Character):
         pass
 
     def move_left(self):
-        self.x -= 4
+        self.x -= 1
 
     def move_right(self):
-        self.x += 4
+        self.x += 1
 
     def fall(self):
         self.y += 1
