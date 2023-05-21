@@ -10,21 +10,23 @@ class Game():
         self.pressed_left = False
         self.pressed_up = False
         self.jumping = False
+        self.game_over = False
+        self.won = False
 
     def climb_down(self):
-        self.level.isNearStairs("down")
+        self.level.isNearStairs("down", self.level.player)
 
     def climb_up(self):
-        self.level.isNearStairs("up")
+        self.level.isNearStairs("up", self.level.player)
 
     def jump(self):
         self.jumping = True
 
     def move_left(self):
-        self.level.isStepUp("left")
+        self.level.isStepUp("left", self.level.player)
 
     def move_right(self):
-        self.level.isStepUp("right")
+        self.level.isStepUp("right", self.level.player)
 
     def pause():
         pass
@@ -40,9 +42,6 @@ class Game():
 
     def start(self):
         self.started = True
-
-    def render(self):
-        pass
 
     def tick(self, screen, frame, events, tick):
         for event in events:
@@ -83,8 +82,8 @@ class Game():
         if self.level.is_not_on_platform(self.level.player):
             self.level.player.fall()
         
-        # Rock fall control
-        self.level.rock_falling()
+        # Objects fall control
+        self.level.object_falling()
 
         # Moving, jumping is handled in the event loop TODO: bug fix climb down
         if self.pressed_right:
@@ -100,10 +99,40 @@ class Game():
         
         if self.started:
             self.level.control_moving_instances()
+        
+        # Removing excess rocks
+        self.level.remove_fallen_rocks()
+
+        # Score calculation and render
+        if not self.won and self.started and not self.game_over:
+            self.level.score_calculation(tick)
+        
+        if self.started:
+            self.level.write_score(screen)
+
+        # Game Over controller
+        if not self.game_over:
+            self.game_over = self.level.game_over()
+
+        if self.game_over:
+            pg.font.init()
+            font_to_use = pg.font.SysFont('arial', 50)
+            text_surface = font_to_use.render('Game Over You Lose :(', False, (255, 255, 255))
+            screen.blit(text_surface, (0,0))
+        
+        # Game winning controller
+        if not self.won:
+            self.won = self.level.you_won()
+        
+        if self.won:
+            pg.font.init()
+            font_to_use = pg.font.SysFont('arial', 50)
+            text_surface = font_to_use.render('You Win :)', False, (255, 255, 255))
+            screen.blit(text_surface, (0,0))
 
         # Rendering
         self.level.draw_obstacles(screen)
-        if self.started:
+        if self.started and not self.game_over and not self.won:
             self.level.draw_animated_instances(screen, frame)
 
     def _set_tick_speed(self):
