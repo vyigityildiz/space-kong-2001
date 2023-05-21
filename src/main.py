@@ -18,13 +18,13 @@ while running:
             
     screen.fill("gray6") # TODO: after done with level design change the color back to gray6
 
-    game.tick(screen, frame, events)
+    game.tick(screen, frame, events, tick)
 
     tick += 1
-    if tick % 20 == 0:
+    if tick % 64 == 0:
         frame += 1
 
     pg.display.flip()
-    clock.tick(60)
+    clock.tick(192)
 
 pg.quit()

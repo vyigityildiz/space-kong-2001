@@ -8,23 +8,23 @@ class Game():
         self.score = 0
         self.pressed_right = False
         self.pressed_left = False
-        self.pressed_down = False
         self.pressed_up = False
+        self.jumping = False
 
     def climb_down(self):
-        pass
+        self.level.isNearStairs("down")
 
     def climb_up(self):
-        pass
+        self.level.isNearStairs("up")
 
     def jump(self):
-        pass
+        self.jumping = True
 
     def move_left(self):
-        self.level.player.move_left()
+        self.level.isStepUp("left")
 
     def move_right(self):
-        self.level.isEmpty("right")
+        self.level.isStepUp("right")
 
     def pause():
         pass
@@ -44,7 +44,7 @@ class Game():
     def render(self):
         pass
 
-    def tick(self, screen, frame, events):
+    def tick(self, screen, frame, events, tick):
         for event in events:
             # Starting the game by pressing any key
             if event.type == pg.KEYDOWN:
@@ -58,9 +58,11 @@ class Game():
                 elif event.key == pg.K_UP:
                     self.pressed_up = True
                 elif event.key == pg.K_DOWN:
-                    self.pressed_down = True
+                    self.climb_down()
                 if event.key == pg.K_SPACE: # TODO: Change after programming the jump method
-                    self.jump()
+                    if not self.level.is_not_on_platform(self.level.player):
+                        self.jump_tick = tick
+                        self.jump()
             # Key up control checks
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_LEFT:
@@ -69,8 +71,6 @@ class Game():
                     self.pressed_right = False
                 elif event.key == pg.K_UP:
                     self.pressed_up = False
-                elif event.key == pg.K_DOWN:
-                    self.pressed_down = False
 
         # Displaying the starting text
         if not self.started:
@@ -80,14 +80,26 @@ class Game():
             screen.blit(text_surface, (0,0))
 
         # Checking if the player is in the air if True then player falls
-        if self.level.is_player_not_on_platform():
+        if self.level.is_not_on_platform(self.level.player):
             self.level.player.fall()
+        
+        # Rock fall control
+        self.level.rock_falling()
 
-        # Moving TODO: Complete for stairs and steps up
+        # Moving, jumping is handled in the event loop TODO: bug fix climb down
         if self.pressed_right:
             self.move_right()
         if self.pressed_left:
             self.move_left()
+        if self.pressed_up and not self.jumping:
+            self.climb_up()
+        if self.jumping:
+            self.level.player.jump()
+            if tick - self.jump_tick == 58:
+                self.jumping = False
+        
+        if self.started:
+            self.level.control_moving_instances()
 
         # Rendering
         self.level.draw_obstacles(screen)

@@ -16,17 +16,51 @@ class Level():
         self.stairs = [[Stair((355, 580 - 20 * i), 64, 20) for i in range(7)], [Stair((655, 570 - 20 * i), 64, 20) for i in range(6)], [Stair((475, 444 - 20 * i), 64, 20) for i in range(7)], [Stair((175, 434 - 20 * i), 64, 20) for i in range(6)], [Stair((419, 310 - 20 * i), 64, 20) for i in range(7)], [Stair((719, 300 - 20 * i), 64, 20) for i in range(6)], [Stair((235, 84 + 20 * i), 64, 20) for i in range(5)]]
         self.spacebro = Character(310, 36, 36, 48, {"idle": ["sprites/spacebro-1.png", "sprites/spacebro-2.png"]}, "idle")
         self.robot = Enemy(55, 82, 72, 96, {"idle": ["sprites/robot_idle-1.png", "sprites/robot_idle-2.png"]}, "idle")
-        self.player = Player(200, 100, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
+        self.player = Player(200, 552, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
+        self.rocks = []
 
-    def isNearStairs(self) -> bool:
-        pass
+    # TODO: Fix climbing down
+    def isNearStairs(self, direction: str) -> bool:
+        if direction == "up":
+            player_interval = self.player.get_position_interval()
+            for stairs in self.stairs:
+                for stair in stairs:
+                    stair_interval = stair.get_position_interval()
+                    if player_interval[0][0] <= stair_interval[1][0] and player_interval[1][0] >= stair_interval[0][0]:
+                        if player_interval[1][1] + 2 >= stair_interval[0][1] and player_interval[1][1] - 2 <= stair_interval[1][1]:
+                            self.player.climb_up()
+        elif direction == "down":
+            player_interval = self.player.get_position_interval()
+            for stairs in self.stairs:
+                for stair in stairs:
+                    stair_interval = stair.get_position_interval()
+                    if player_interval[0][0] <= stair_interval[1][0] and player_interval[1][0] >= stair_interval[0][0]:
+                        if player_interval[1][1] - 2 <= stair_interval[0][1]:
+                            self.player.climb_down()
 
+    # TODO: After being sure that this is irrelevant delete the method
     def canJump(self) -> bool:
         pass
 
-    def isEmpty(self, side: str) -> bool: # TODO: complete
+    def isStepUp(self, side: str):
         if side == "right":
+            player_interval = self.player.get_position_interval()
+            for platforms in self.platforms:
+                for platform in platforms:
+                    platform_interval = platform.get_position_interval()
+                    if player_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
+                        if player_interval[1][0] + 1 == platform_interval[0][0]: # Player x and platform x
+                            self.player.move_up_platforms()
             self.player.move_right()
+        elif side == "left":
+            player_interval = self.player.get_position_interval()
+            for platforms in self.platforms:
+                for platform in platforms:
+                    platform_interval = platform.get_position_interval()
+                    if player_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
+                        if player_interval[0][0] + 1 == platform_interval[1][0]: # Player x and platform x
+                            self.player.move_up_platforms()
+            self.player.move_left()
 
     def stopAll(self):
         pass
@@ -38,15 +72,32 @@ class Level():
         pass
 
     def control_moving_instances(self):
-        pass
+        # Rock rolling
+        for rock in self.rocks:
+            rock_interval = rock.get_position_interval()
+            if (rock_interval[1][1] >= 450 and rock_interval[1][1] <= 485) or (rock_interval[1][1] >= 178 and rock_interval[1][1] <= 213):
+                rock.move("right")
+            elif (rock_interval[1][1] >= 585 and rock_interval[1][1] <= 620) or (rock_interval[1][1] >= 303 and rock_interval[1][1] <= 348):
+                rock.move("left")
 
-    def is_player_not_on_platform(self):
-        player_interval = self.player.get_position_interval()
+        # Rock throwing
+        throw = self.robot.throw_rock()
+        if throw[0]:
+            self.rocks.append(throw[1])
+
+    def rock_falling(self):
+        for rock in self.rocks:
+            if self.is_not_on_platform(rock):
+                rock.fall()
+
+    # On platform check for mainly falling methods of player and rocks
+    def is_not_on_platform(self, who):
+        who_interval = who.get_position_interval()
         for platforms in self.platforms:
             for platform in platforms:
                 platform_interval = platform.get_position_interval()
-                if player_interval[1][1] == platform_interval[0][1]: # Player's bottom y value and platform's top y value
-                    if player_interval[0][0] <= platform_interval[1][0] and player_interval[1][0] >= platform_interval[0][0]: # Player x and platform x
+                if who_interval[1][1] == platform_interval[0][1]: # Player's bottom y value and platform's top y value
+                    if who_interval[0][0] <= platform_interval[1][0] and who_interval[1][0] >= platform_interval[0][0]: # Player x and platform x
                         return False
         return True
 
@@ -63,3 +114,5 @@ class Level():
         self.robot.draw(screen, frame)
         self.spaceship.draw(screen, frame)
         self.player.draw(screen, frame)
+        for rock in self.rocks:
+            rock.draw(screen, frame)
