@@ -10,6 +10,8 @@ class Game():
         self.pressed_left = False
         self.pressed_up = False
         self.jumping = False
+        self.game_over = False
+        self.won = False
 
     def climb_down(self):
         self.level.isNearStairs("down", self.level.player)
@@ -101,9 +103,36 @@ class Game():
         # Removing excess rocks
         self.level.remove_fallen_rocks()
 
+        # Score calculation and render
+        if not self.won and self.started and not self.game_over:
+            self.level.score_calculation(tick)
+        
+        if self.started:
+            self.level.write_score(screen)
+
+        # Game Over controller
+        if not self.game_over:
+            self.game_over = self.level.game_over()
+
+        if self.game_over:
+            pg.font.init()
+            font_to_use = pg.font.SysFont('arial', 50)
+            text_surface = font_to_use.render('Game Over You Lose :(', False, (255, 255, 255))
+            screen.blit(text_surface, (0,0))
+        
+        # Game winning controller
+        if not self.won:
+            self.won = self.level.you_won()
+        
+        if self.won:
+            pg.font.init()
+            font_to_use = pg.font.SysFont('arial', 50)
+            text_surface = font_to_use.render('You Win :)', False, (255, 255, 255))
+            screen.blit(text_surface, (0,0))
+
         # Rendering
         self.level.draw_obstacles(screen)
-        if self.started:
+        if self.started and not self.game_over and not self.won:
             self.level.draw_animated_instances(screen, frame)
 
     def _set_tick_speed(self):

@@ -8,6 +8,7 @@ from Character import Character
 from Player import Player
 from Enemy import Enemy
 import random # used to randomize the stair climbing behavior of aliens
+import pygame as pg
 
 # Class that builds and updates the level. Includes the level design, characters, and projectiles. 
 class Level():
@@ -20,6 +21,7 @@ class Level():
         self.player = Player(200, 552, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
         self.rocks = [Rock(150, 130, 24, 24)]
         self.aliens = [Alien(80, 550, 21, 24)]
+        self.score = 0
 
     def isNearStairs(self, direction: str, who) -> bool:
         if direction == "up":
@@ -81,10 +83,11 @@ class Level():
         if throw[0]:
             self.rocks.append(throw[1])
 
-        # TODO: Alien moving including climbing
+        # Alien moving including climbing
         for alien in self.aliens:
             alien_interval = alien.get_position_interval()
             index = 0
+            # Alien climbing controls
             if not alien.climbing:
                 stairs_list = self.stairs.copy()
                 for stairs in stairs_list[0:-1]:
@@ -151,7 +154,47 @@ class Level():
         if len(self.rocks) != 0:
             if self.rocks[0].get_position_interval()[0][1] >= 720:
                 self.rocks.pop(0)
+
+    # Game over check
+    def game_over(self):
+        player_interval = self.player.get_position_interval()
+        # check rocks
+        for rock in self.rocks:
+            rock_interval = rock.get_position_interval()
+            if (rock_interval[0][0] <= player_interval[0][0] and rock_interval[1][0] >= player_interval[0][0]) or (rock_interval[0][0] <= player_interval[1][0] and rock_interval[1][0] >= player_interval[1][0]):
+                if (rock_interval[0][1] <= player_interval[0][1] and rock_interval[1][1] >= player_interval[0][1]) or (rock_interval[0][1] <= player_interval[1][1] and rock_interval[1][1] >= player_interval[1][1]):
+                    return True
+        # check aliens
+        for alien in self.aliens:
+            alien_interval = alien.get_position_interval()
+            if (alien_interval[0][0] <= player_interval[0][0] and alien_interval[1][0] >= player_interval[0][0]) or (alien_interval[0][0] <= player_interval[1][0] and alien_interval[1][0] >= player_interval[1][0]):
+                if (alien_interval[0][1] <= player_interval[0][1] and alien_interval[1][1] >= player_interval[0][1]) or (alien_interval[0][1] <= player_interval[1][1] and alien_interval[1][1] >= player_interval[1][1]):
+                    return True
+        # check if the player fell down
+        if player_interval[0][1] >= 720:
+            return True
+        return False
     
+    # game won
+    def you_won(self):
+        player_interval = self.player.get_position_interval()
+        spacebro_interval = self.spacebro.get_position_interval()
+        if (spacebro_interval[0][0] <= player_interval[0][0] and spacebro_interval[1][0] >= player_interval[0][0]) or (spacebro_interval[0][0] <= player_interval[1][0] and spacebro_interval[1][0] >= player_interval[1][0]):
+            if (spacebro_interval[0][1] <= player_interval[0][1] and spacebro_interval[1][1] >= player_interval[0][1]):
+                print("you won")
+                return True
+        return False
+    
+    def score_calculation(self, tick):
+        if tick % 48:
+            self.score += 3
+        
+    def write_score(self, screen):
+        pg.font.init()
+        font_to_use = pg.font.SysFont('arial', 35)
+        text_surface = font_to_use.render(('Score: ' + str(self.score)), False, (255, 255, 255))
+        screen.blit(text_surface, (700,0))
+
     # Drawing of the animated objects
     def draw_animated_instances(self, screen, frame):
         self.spacebro.draw(screen, frame)
