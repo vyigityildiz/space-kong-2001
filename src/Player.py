@@ -6,10 +6,10 @@ class Player(Character):
         super().__init__(x, y, width, height, sprites, state)
 
     def climb_down(self):
-        pass
+        self.fall()
 
     def climb_up(self):
-        pass
+        self.y -= 2
 
     def jump(self):
         pass

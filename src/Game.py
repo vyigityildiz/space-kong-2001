@@ -12,10 +12,10 @@ class Game():
         self.pressed_up = False
 
     def climb_down(self):
-        pass
+        self.level.isNearStairs("down")
 
     def climb_up(self):
-        pass
+        self.level.isNearStairs("up")
 
     def jump(self):
         pass
@@ -83,11 +83,15 @@ class Game():
         if self.level.is_player_not_on_platform():
             self.level.player.fall()
 
-        # Moving TODO: Complete for stairs
+        # Moving, jumping is handled in the event loop TODO: bug fix climb down
         if self.pressed_right:
             self.move_right()
         if self.pressed_left:
             self.move_left()
+        if self.pressed_up:
+            self.climb_up()
+        if self.pressed_down:
+            self.climb_down()
 
         # Rendering
         self.level.draw_obstacles(screen)

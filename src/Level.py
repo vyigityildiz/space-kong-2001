@@ -18,14 +18,29 @@ class Level():
         self.robot = Enemy(55, 82, 72, 96, {"idle": ["sprites/robot_idle-1.png", "sprites/robot_idle-2.png"]}, "idle")
         self.player = Player(200, 100, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
 
-    def isNearStairs(self) -> bool:
-        pass
+    def isNearStairs(self, direction: str) -> bool:
+        if direction == "up":
+            player_interval = self.player.get_position_interval()
+            for stairs in self.stairs:
+                for stair in stairs:
+                    stair_interval = stair.get_position_interval()
+                    if player_interval[0][0] <= stair_interval[1][0] and player_interval[1][0] >= stair_interval[0][0]:
+                        if player_interval[1][1] + 2 >= stair_interval[0][1] and player_interval[1][1] - 2 <= stair_interval[1][1]:
+                            self.player.climb_up()
+        elif direction == "down":
+            player_interval = self.player.get_position_interval()
+            for stairs in self.stairs:
+                for stair in stairs:
+                    stair_interval = stair.get_position_interval()
+                    if player_interval[0][0] <= stair_interval[1][0] and player_interval[1][0] >= stair_interval[0][0]:
+                        if player_interval[1][1] - 2 <= stair_interval[0][1]:
+                            self.player.climb_down()
 
-    # TODO: After sure this is irrelevant delete the method
+    # TODO: After being sure that this is irrelevant delete the method
     def canJump(self) -> bool:
         pass
 
-    def isStepUp(self, side: str) -> bool: # TODO: complete
+    def isStepUp(self, side: str):
         if side == "right":
             player_interval = self.player.get_position_interval()
             for platforms in self.platforms:
