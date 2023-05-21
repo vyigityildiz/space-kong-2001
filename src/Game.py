@@ -21,10 +21,10 @@ class Game():
         pass
 
     def move_left(self):
-        self.level.isEmpty("left")
+        self.level.isStepUp("left")
 
     def move_right(self):
-        self.level.isEmpty("right")
+        self.level.isStepUp("right")
 
     def pause():
         pass

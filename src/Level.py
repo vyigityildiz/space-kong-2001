@@ -25,7 +25,7 @@ class Level():
     def canJump(self) -> bool:
         pass
 
-    def isEmpty(self, side: str) -> bool: # TODO: complete
+    def isStepUp(self, side: str) -> bool: # TODO: complete
         if side == "right":
             player_interval = self.player.get_position_interval()
             for platforms in self.platforms:
