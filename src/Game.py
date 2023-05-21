@@ -12,10 +12,10 @@ class Game():
         self.jumping = False
 
     def climb_down(self):
-        self.level.isNearStairs("down")
+        self.level.isNearStairs("down", self.level.player)
 
     def climb_up(self):
-        self.level.isNearStairs("up")
+        self.level.isNearStairs("up", self.level.player)
 
     def jump(self):
         self.jumping = True
@@ -97,6 +97,9 @@ class Game():
         
         if self.started:
             self.level.control_moving_instances()
+        
+        # Removing excess rocks
+        self.level.remove_fallen_rocks()
 
         # Rendering
         self.level.draw_obstacles(screen)

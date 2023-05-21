@@ -8,6 +8,10 @@ class Alien():
         self.width = width
         self.height = height
         self.sprites = ["sprites/alien-1.png", "sprites/alien-2.png"]
+        self.right = True
+        self.climbing = False
+        self.up = True
+        self.stairs_index = None
 
     def move_right(self):
         self.x += 1
@@ -19,10 +23,7 @@ class Alien():
         self.y += 1
 
     def climb_up(self):
-        self.y += 2
-    
-    def climb_down(self):
-        self.fall()
+        self.y -= 2
 
     def move_up_platforms(self):
         self.y -= 2

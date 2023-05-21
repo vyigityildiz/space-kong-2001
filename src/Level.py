@@ -7,6 +7,7 @@ from Alien import Alien
 from Character import Character
 from Player import Player
 from Enemy import Enemy
+import random # used to randomize the stair climbing behavior of aliens
 
 # Class that builds and updates the level. Includes the level design, characters, and projectiles. 
 class Level():
@@ -20,23 +21,23 @@ class Level():
         self.rocks = [Rock(150, 130, 24, 24)]
         self.aliens = [Alien(80, 550, 21, 24)]
 
-    def isNearStairs(self, direction: str) -> bool:
+    def isNearStairs(self, direction: str, who) -> bool:
         if direction == "up":
-            player_interval = self.player.get_position_interval()
+            who_interval = who.get_position_interval()
             for stairs in self.stairs:
                 for stair in stairs:
                     stair_interval = stair.get_position_interval()
-                    if player_interval[0][0] <= stair_interval[1][0] and player_interval[1][0] >= stair_interval[0][0]:
-                        if player_interval[1][1] + 2 >= stair_interval[0][1] and player_interval[1][1] - 2 <= stair_interval[1][1]:
-                            self.player.climb_up()
+                    if who_interval[0][0] <= stair_interval[1][0] and who_interval[1][0] >= stair_interval[0][0]:
+                        if who_interval[1][1] + 2 >= stair_interval[0][1] and who_interval[1][1] - 2 <= stair_interval[1][1]:
+                            who.climb_up()
         elif direction == "down":
-            player_interval = self.player.get_position_interval()
+            who_interval = who.get_position_interval()
             for stairs in self.stairs:
                 for stair in stairs:
                     stair_interval = stair.get_position_interval()
-                    if player_interval[0][0] <= stair_interval[1][0] and player_interval[1][0] >= stair_interval[0][0]:
-                        if player_interval[1][1] - 2 <= stair_interval[0][1]:
-                            self.player.climb_down()
+                    if who_interval[0][0] <= stair_interval[1][0] and who_interval[1][0] >= stair_interval[0][0]:
+                        if who_interval[1][1] - 2 <= stair_interval[0][1]:
+                            who.climb_down()
 
     # Stepping up and moving for aliens and player
     def isStepUp(self, side: str, who):
@@ -80,7 +81,37 @@ class Level():
         if throw[0]:
             self.rocks.append(throw[1])
 
-        # TODO: Alien Moving including stairs
+        # TODO: Alien moving including climbing
+        for alien in self.aliens:
+            alien_interval = alien.get_position_interval()
+            index = 0
+            if not alien.climbing:
+                stairs_list = self.stairs.copy()
+                for stairs in stairs_list[0:-1]:
+                    for stair in stairs:
+                        stair_interval = stair.get_position_interval()
+                        if ((alien_interval[0][0] + alien_interval[1][0]) // 2) == ((stair_interval[1][0] + stair_interval[0][0]) // 2):
+                            if alien_interval[1][1] - 2 >= stair_interval[0][1] and alien_interval[0][1] + 2 <= stair_interval[1][1]:
+                                alien.climbing = random.choice([True, False])
+                                alien.stairs_index = index
+                    index += 1
+            if alien.climbing:
+                alien.climb_up()
+                if ((alien_interval[0][0] + alien_interval[1][0]) // 2) == ((self.stairs[alien.stairs_index][-1].get_position_interval()[1][0] + self.stairs[alien.stairs_index][-1].get_position_interval()[0][0]) // 2):
+                    if alien_interval[1][1] - 2 <= self.stairs[alien.stairs_index][-1].get_position_interval()[0][1]:
+                        alien.climbing = False
+            # alien walking
+            if (not alien.climbing) and (not self.is_not_on_platform(alien)):
+                if alien.right:
+                    if alien_interval[1][0] <= 860:
+                        self.isStepUp("right", alien)
+                    else:
+                        alien.right = False
+                elif not alien.right:
+                    if alien_interval[0][0] >= 80:
+                        self.isStepUp("left", alien)
+                    else:
+                        alien.right = True
 
         # Alien Deploying
         deploy = self.spaceship.deploy_alien()
@@ -115,6 +146,11 @@ class Level():
         for stairs in self.stairs:
             for stair in stairs:
                 stair.draw(screen)
+
+    def remove_fallen_rocks(self):
+        if len(self.rocks) != 0:
+            if self.rocks[0].get_position_interval()[0][1] >= 720:
+                self.rocks.pop(0)
     
     # Drawing of the animated objects
     def draw_animated_instances(self, screen, frame):
