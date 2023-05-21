@@ -21,10 +21,10 @@ class Game():
         self.jumping = True
 
     def move_left(self):
-        self.level.isStepUp("left")
+        self.level.isStepUp("left", self.level.player)
 
     def move_right(self):
-        self.level.isStepUp("right")
+        self.level.isStepUp("right", self.level.player)
 
     def pause():
         pass
@@ -83,8 +83,8 @@ class Game():
         if self.level.is_not_on_platform(self.level.player):
             self.level.player.fall()
         
-        # Rock fall control
-        self.level.rock_falling()
+        # Objects fall control
+        self.level.object_falling()
 
         # Moving, jumping is handled in the event loop TODO: bug fix climb down
         if self.pressed_right:

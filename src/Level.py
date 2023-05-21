@@ -17,9 +17,9 @@ class Level():
         self.spacebro = Character(310, 36, 36, 48, {"idle": ["sprites/spacebro-1.png", "sprites/spacebro-2.png"]}, "idle")
         self.robot = Enemy(55, 82, 72, 96, {"idle": ["sprites/robot_idle-1.png", "sprites/robot_idle-2.png"]}, "idle")
         self.player = Player(200, 552, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
-        self.rocks = []
+        self.rocks = [Rock(150, 130, 24, 24)]
+        self.aliens = [Alien(80, 550, 21, 24)]
 
-    # TODO: Fix climbing down
     def isNearStairs(self, direction: str) -> bool:
         if direction == "up":
             player_interval = self.player.get_position_interval()
@@ -38,27 +38,24 @@ class Level():
                         if player_interval[1][1] - 2 <= stair_interval[0][1]:
                             self.player.climb_down()
 
-    # TODO: After being sure that this is irrelevant delete the method
-    def canJump(self) -> bool:
-        pass
-
-    def isStepUp(self, side: str):
+    # Stepping up and moving for aliens and player
+    def isStepUp(self, side: str, who):
         if side == "right":
-            player_interval = self.player.get_position_interval()
+            who_interval =who.get_position_interval()
             for platforms in self.platforms:
                 for platform in platforms:
                     platform_interval = platform.get_position_interval()
-                    if player_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
-                        if player_interval[1][0] + 1 == platform_interval[0][0]: # Player x and platform x
+                    if who_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
+                        if who_interval[1][0] + 1 == platform_interval[0][0]: # Player x and platform x
                             self.player.move_up_platforms()
             self.player.move_right()
         elif side == "left":
-            player_interval = self.player.get_position_interval()
+            who_interval = who.get_position_interval()
             for platforms in self.platforms:
                 for platform in platforms:
                     platform_interval = platform.get_position_interval()
-                    if player_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
-                        if player_interval[0][0] + 1 == platform_interval[1][0]: # Player x and platform x
+                    if who_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
+                        if who_interval[0][0] + 1 == platform_interval[1][0]: # Player x and platform x
                             self.player.move_up_platforms()
             self.player.move_left()
 
@@ -66,9 +63,6 @@ class Level():
         pass
 
     def resumeAll(self):
-        pass
-
-    def loadLevel(self):
         pass
 
     def control_moving_instances(self):
@@ -85,10 +79,15 @@ class Level():
         if throw[0]:
             self.rocks.append(throw[1])
 
-    def rock_falling(self):
+        # TODO: Alien Moving
+
+    def object_falling(self):
         for rock in self.rocks:
             if self.is_not_on_platform(rock):
                 rock.fall()
+        for alien in self.aliens:
+            if self.is_not_on_platform(alien):
+                alien.fall()
 
     # On platform check for mainly falling methods of player and rocks
     def is_not_on_platform(self, who):
@@ -116,3 +115,5 @@ class Level():
         self.player.draw(screen, frame)
         for rock in self.rocks:
             rock.draw(screen, frame)
+        for alien in self.aliens:
+            alien.draw(screen, frame)
