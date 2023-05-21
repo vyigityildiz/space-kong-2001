@@ -21,7 +21,7 @@ class Game():
         pass
 
     def move_left(self):
-        self.level.player.move_left()
+        self.level.isEmpty("left")
 
     def move_right(self):
         self.level.isEmpty("right")
@@ -83,7 +83,7 @@ class Game():
         if self.level.is_player_not_on_platform():
             self.level.player.fall()
 
-        # Moving TODO: Complete for stairs and steps up
+        # Moving TODO: Complete for stairs
         if self.pressed_right:
             self.move_right()
         if self.pressed_left:

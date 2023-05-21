@@ -22,3 +22,6 @@ class Player(Character):
 
     def fall(self):
         self.y += 1
+
+    def move_up_platforms(self):
+        self.y -= 2

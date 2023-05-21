@@ -21,12 +21,29 @@ class Level():
     def isNearStairs(self) -> bool:
         pass
 
+    # TODO: After sure this is irrelevant delete the method
     def canJump(self) -> bool:
         pass
 
     def isEmpty(self, side: str) -> bool: # TODO: complete
         if side == "right":
+            player_interval = self.player.get_position_interval()
+            for platforms in self.platforms:
+                for platform in platforms:
+                    platform_interval = platform.get_position_interval()
+                    if player_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
+                        if player_interval[1][0] + 1 == platform_interval[0][0]: # Player x and platform x
+                            self.player.move_up_platforms()
             self.player.move_right()
+        elif side == "left":
+            player_interval = self.player.get_position_interval()
+            for platforms in self.platforms:
+                for platform in platforms:
+                    platform_interval = platform.get_position_interval()
+                    if player_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
+                        if player_interval[0][0] + 1 == platform_interval[1][0]: # Player x and platform x
+                            self.player.move_up_platforms()
+            self.player.move_left()
 
     def stopAll(self):
         pass
