@@ -61,6 +61,8 @@ class Alien():
         if stair.is_alien_at_stair(self._get_position_interval()):
             self.climbing = random.choice([True, False])
             self.stairs_index = index
+            return True
+        return False
 
     def is_walking_right(self):
         return self._get_position_interval()[1][0] <= 860

@@ -21,6 +21,7 @@ class Level():
         self.player = Player(200, 552, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
         self.rocks = [Rock(150, 130, 24, 24)]
         self.aliens = [Alien(80, 550, 21, 24)]
+        self.alien_climbing = [False]
         self.score = 0
 
     def isNearStairs(self, direction: str, who) -> bool:
@@ -57,23 +58,25 @@ class Level():
             self.rocks.append(throw[1])
 
         # Alien moving including climbing
+        climbing_index = 0
         for alien in self.aliens:
             index = 0
             # Alien climbing controls
-            if not alien.climbing:
+            if not self.alien_climbing[climbing_index]:
                 stairs_list = self.stairs.copy()
                 for stairs in stairs_list[0:-1]:
                     for stair in stairs:
-                        alien.is_at_stair(stair, index)
+                        if alien.is_at_stair(stair, index):
+                            self.alien_climbing[climbing_index] = random.choice([True, False])
                     index += 1
-            if alien.climbing:
+            if self.alien_climbing[climbing_index]:
                 alien.climb_up()
                 alien_interval = alien._get_position_interval()
                 if ((alien_interval[0][0] + alien_interval[1][0]) // 2) == ((self.stairs[alien.stairs_index][-1]._get_position_interval()[1][0] + self.stairs[alien.stairs_index][-1]._get_position_interval()[0][0]) // 2):
                     if alien_interval[1][1] - 2 <= self.stairs[alien.stairs_index][-1]._get_position_interval()[0][1]:
-                        alien.climbing = False
+                        self.alien_climbing[climbing_index] = False
             # alien walking
-            if (not alien.climbing) and (not self.is_not_on_platform(alien)):
+            if (not self.alien_climbing[climbing_index]) and (not self.is_not_on_platform(alien)):
                 if alien.right:
                     if alien.is_walking_right():
                         self.isStepUp("right", alien)
@@ -84,11 +87,13 @@ class Level():
                         self.isStepUp("left", alien)
                     else:
                         alien.right = True
+            climbing_index += 1
 
         # Alien Deploying
         deploy = self.spaceship.deploy_alien()
         if deploy[0] and len(self.aliens) <= 20:
             self.aliens.append(deploy[1])
+            self.alien_climbing.append(False)
 
     # Falling of rocks and aliens
     def object_falling(self):
