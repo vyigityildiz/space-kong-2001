@@ -20,6 +20,7 @@ class Level():
         self.robot = Enemy(55, 82, 72, 96, {"idle": ["sprites/robot_idle-1.png", "sprites/robot_idle-2.png"]}, "idle")
         self.player = Player(200, 552, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
         self.rocks = [Rock(150, 130, 24, 24)]
+        # List to track which aliens are climbing
         self.aliens = [Alien(80, 550, 21, 24)]
         self.alien_climbing = [False]
         self.score = 0
@@ -71,12 +72,11 @@ class Level():
                     index += 1
             if self.alien_climbing[climbing_index]:
                 alien.climb_up()
-                alien_interval = alien._get_position_interval()
-                if ((alien_interval[0][0] + alien_interval[1][0]) // 2) == ((self.stairs[alien.stairs_index][-1]._get_position_interval()[1][0] + self.stairs[alien.stairs_index][-1]._get_position_interval()[0][0]) // 2):
-                    if alien_interval[1][1] - 2 <= self.stairs[alien.stairs_index][-1]._get_position_interval()[0][1]:
+                if alien.is_alien_at_the_top_of_stair(self.stairs):
                         self.alien_climbing[climbing_index] = False
             # alien walking
             if (not self.alien_climbing[climbing_index]) and (not self.is_not_on_platform(alien)):
+                #TODO: Fix this data sharing issue if you can
                 if alien.right:
                     if alien.is_walking_right():
                         self.isStepUp("right", alien)

@@ -58,7 +58,7 @@ class Game():
                     self.pressed_up = True
                 elif event.key == pg.K_DOWN:
                     self.climb_down()
-                if event.key == pg.K_SPACE: # TODO: Change after programming the jump method
+                if event.key == pg.K_SPACE:
                     if not self.level.is_not_on_platform(self.level.player):
                         self.jump_tick = tick
                         self.jump()
