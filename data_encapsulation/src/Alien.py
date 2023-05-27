@@ -67,3 +67,8 @@ class Alien():
     
     def is_alien_at_the_top_of_stair(self, stairs):
         return stairs[self.stairs_index][-1].is_alien_at_the_top_of_stairs(self._get_position_interval())
+    
+    def is_alien_moving_right(self):
+        if self.right:
+            return True
+        return False

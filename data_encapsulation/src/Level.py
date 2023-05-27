@@ -20,8 +20,8 @@ class Level():
         self.robot = Enemy(55, 82, 72, 96, {"idle": ["sprites/robot_idle-1.png", "sprites/robot_idle-2.png"]}, "idle")
         self.player = Player(200, 552, 36, 48, {"idle": ["sprites/spaceplumber-1.png", "sprites/spaceplumber-2.png"]}, "idle")
         self.rocks = [Rock(150, 130, 24, 24)]
-        # List to track which aliens are climbing
         self.aliens = [Alien(80, 550, 21, 24)]
+        # List to track which aliens are climbing whenever an alien is deployed False is appended to this list and this list is only manipulated when an alien is climbing
         self.alien_climbing = [False]
         self.score = 0
 
@@ -76,13 +76,12 @@ class Level():
                         self.alien_climbing[climbing_index] = False
             # alien walking
             if (not self.alien_climbing[climbing_index]) and (not self.is_not_on_platform(alien)):
-                #TODO: Fix this data sharing issue if you can
-                if alien.right:
+                if alien.is_alien_moving_right():
                     if alien.is_walking_right():
                         self.isStepUp("right", alien)
                     else:
                         alien.right = False
-                elif not alien.right:
+                elif not alien.is_alien_moving_right():
                     if alien.is_walking_left():
                         self.isStepUp("left", alien)
                     else:
