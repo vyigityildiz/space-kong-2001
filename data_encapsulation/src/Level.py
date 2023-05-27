@@ -25,52 +25,31 @@ class Level():
 
     def isNearStairs(self, direction: str, who) -> bool:
         if direction == "up":
-            who_interval = who.get_position_interval()
             for stairs in self.stairs:
                 for stair in stairs:
-                    stair_interval = stair.get_position_interval()
-                    if who_interval[0][0] <= stair_interval[1][0] and who_interval[1][0] >= stair_interval[0][0]:
-                        if who_interval[1][1] + 2 >= stair_interval[0][1] and who_interval[1][1] - 2 <= stair_interval[1][1]:
-                            who.climb_up()
+                    if who.is_at_stairs(stair, direction):
+                        who.climb_up()
         elif direction == "down":
-            who_interval = who.get_position_interval()
             for stairs in self.stairs:
                 for stair in stairs:
-                    stair_interval = stair.get_position_interval()
-                    if who_interval[0][0] <= stair_interval[1][0] and who_interval[1][0] >= stair_interval[0][0]:
-                        if who_interval[1][1] - 2 <= stair_interval[0][1]:
-                            who.climb_down()
+                    if who.is_at_stairs(stair, direction):
+                        who.climb_down()
 
     # Stepping up and moving for aliens and player
     def isStepUp(self, side: str, who):
+        for platforms in self.platforms:
+            for platform in platforms:
+                who.is_at_step(platform, side)
         if side == "right":
-            who_interval =who.get_position_interval()
-            for platforms in self.platforms:
-                for platform in platforms:
-                    platform_interval = platform.get_position_interval()
-                    if who_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
-                        if who_interval[1][0] + 1 == platform_interval[0][0]: # Player x and platform x
-                            who.move_up_platforms()
             who.move_right()
         elif side == "left":
-            who_interval = who.get_position_interval()
-            for platforms in self.platforms:
-                for platform in platforms:
-                    platform_interval = platform.get_position_interval()
-                    if who_interval[1][1] - 2 == platform_interval[0][1]: # Player's bottom y value and platform's top y value
-                        if who_interval[0][0] + 1 == platform_interval[1][0]: # Player x and platform x
-                            who.move_up_platforms()
             who.move_left()
 
     # Rock and alien movements and deployments
     def control_moving_instances(self):
         # Rock rolling
         for rock in self.rocks:
-            rock_interval = rock.get_position_interval()
-            if (rock_interval[1][1] >= 450 and rock_interval[1][1] <= 485) or (rock_interval[1][1] >= 178 and rock_interval[1][1] <= 213):
-                rock.move("right")
-            elif (rock_interval[1][1] >= 585 and rock_interval[1][1] <= 620) or (rock_interval[1][1] >= 303 and rock_interval[1][1] <= 348):
-                rock.move("left")
+            rock.move()
 
         # Rock throwing
         throw = self.robot.throw_rock()
@@ -79,33 +58,29 @@ class Level():
 
         # Alien moving including climbing
         for alien in self.aliens:
-            alien_interval = alien.get_position_interval()
             index = 0
             # Alien climbing controls
             if not alien.climbing:
                 stairs_list = self.stairs.copy()
                 for stairs in stairs_list[0:-1]:
                     for stair in stairs:
-                        stair_interval = stair.get_position_interval()
-                        if ((alien_interval[0][0] + alien_interval[1][0]) // 2) == ((stair_interval[1][0] + stair_interval[0][0]) // 2):
-                            if alien_interval[1][1] - 2 >= stair_interval[0][1] and alien_interval[0][1] + 2 <= stair_interval[1][1]:
-                                alien.climbing = random.choice([True, False])
-                                alien.stairs_index = index
+                        alien.is_at_stair(stair, index)
                     index += 1
             if alien.climbing:
                 alien.climb_up()
-                if ((alien_interval[0][0] + alien_interval[1][0]) // 2) == ((self.stairs[alien.stairs_index][-1].get_position_interval()[1][0] + self.stairs[alien.stairs_index][-1].get_position_interval()[0][0]) // 2):
-                    if alien_interval[1][1] - 2 <= self.stairs[alien.stairs_index][-1].get_position_interval()[0][1]:
+                alien_interval = alien._get_position_interval()
+                if ((alien_interval[0][0] + alien_interval[1][0]) // 2) == ((self.stairs[alien.stairs_index][-1]._get_position_interval()[1][0] + self.stairs[alien.stairs_index][-1]._get_position_interval()[0][0]) // 2):
+                    if alien_interval[1][1] - 2 <= self.stairs[alien.stairs_index][-1]._get_position_interval()[0][1]:
                         alien.climbing = False
             # alien walking
             if (not alien.climbing) and (not self.is_not_on_platform(alien)):
                 if alien.right:
-                    if alien_interval[1][0] <= 860:
+                    if alien.is_walking_right():
                         self.isStepUp("right", alien)
                     else:
                         alien.right = False
                 elif not alien.right:
-                    if alien_interval[0][0] >= 80:
+                    if alien.is_walking_left():
                         self.isStepUp("left", alien)
                     else:
                         alien.right = True
@@ -126,13 +101,10 @@ class Level():
 
     # On platform check for mainly falling methods of player and rocks
     def is_not_on_platform(self, who):
-        who_interval = who.get_position_interval()
         for platforms in self.platforms:
             for platform in platforms:
-                platform_interval = platform.get_position_interval()
-                if who_interval[1][1] == platform_interval[0][1]: # Player's bottom y value and platform's top y value
-                    if who_interval[0][0] <= platform_interval[1][0] and who_interval[1][0] >= platform_interval[0][0]: # Player x and platform x
-                        return False
+                if who.is_on_platform(platform):
+                    return False
         return True
 
     # Cumulative rendering method for static obstacle objects to call in the tick method in Game object
@@ -148,38 +120,27 @@ class Level():
     # Removal of excess rocks
     def remove_fallen_rocks(self):
         if len(self.rocks) != 0:
-            if self.rocks[0].get_position_interval()[0][1] >= 720:
+            if self.rocks[0].is_fallen():
                 self.rocks.pop(0)
 
     # Game over check
     def game_over(self):
-        player_interval = self.player.get_position_interval()
         # check rocks
         for rock in self.rocks:
-            rock_interval = rock.get_position_interval()
-            if (rock_interval[0][0] <= player_interval[0][0] and rock_interval[1][0] >= player_interval[0][0]) or (rock_interval[0][0] <= player_interval[1][0] and rock_interval[1][0] >= player_interval[1][0]):
-                if (rock_interval[0][1] <= player_interval[0][1] and rock_interval[1][1] >= player_interval[0][1]) or (rock_interval[0][1] <= player_interval[1][1] and rock_interval[1][1] >= player_interval[1][1]):
-                    return True
+            if self.player.did_hit_rock(rock):
+                return True
         # check aliens
         for alien in self.aliens:
-            alien_interval = alien.get_position_interval()
-            if (alien_interval[0][0] <= player_interval[0][0] and alien_interval[1][0] >= player_interval[0][0]) or (alien_interval[0][0] <= player_interval[1][0] and alien_interval[1][0] >= player_interval[1][0]):
-                if (alien_interval[0][1] <= player_interval[0][1] and alien_interval[1][1] >= player_interval[0][1]) or (alien_interval[0][1] <= player_interval[1][1] and alien_interval[1][1] >= player_interval[1][1]):
-                    return True
+            if self.player.did_hit_alien(alien):
+                return True
         # check if the player fell down
-        if player_interval[0][1] >= 720:
+        if self.player.did_fall():
             return True
         return False
     
     # game won
     def you_won(self):
-        player_interval = self.player.get_position_interval()
-        spacebro_interval = self.spacebro.get_position_interval()
-        if (spacebro_interval[0][0] <= player_interval[0][0] and spacebro_interval[1][0] >= player_interval[0][0]) or (spacebro_interval[0][0] <= player_interval[1][0] and spacebro_interval[1][0] >= player_interval[1][0]):
-            if (spacebro_interval[0][1] <= player_interval[0][1] and spacebro_interval[1][1] >= player_interval[0][1]):
-                print("you won")
-                return True
-        return False
+        return self.player.did_collide_with_spacebro(self.spacebro)
     
     # Calculate score
     def score_calculation(self, tick):
