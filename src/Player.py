@@ -25,3 +25,25 @@ class Player(Character):
 
     def move_up_platforms(self):
         self.y -= 2
+
+    def is_at_step(self, platform, side: str):
+        if platform.is_instance_at_step(self._get_position_interval(), side):
+            self.move_up_platforms()
+
+    def did_hit_rock(self, rock):
+        return rock.did_player_hit_rock(self._get_position_interval())
+    
+    def did_hit_alien(self, alien):
+        return alien.did_player_hit_alien(self._get_position_interval())
+    
+    def did_collide_with_spacebro(self, spacebro):
+        return spacebro.did_player_collide(self._get_position_interval())
+    
+    def is_on_platform(self, platform):
+        return platform.is_not_on_platform(self._get_position_interval())
+    
+    def did_fall(self):
+        return self._get_position_interval()[0][1] >= 720
+    
+    def is_at_stairs(self, stair, direction):
+        return stair.is_instance_at_stair(self._get_position_interval(), direction)

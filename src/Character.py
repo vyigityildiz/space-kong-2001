@@ -18,7 +18,14 @@ class Character():
         self._rect = self._image.get_rect()
         screen.blit(self._image, (self.x, self.y))
 
-    def get_position_interval(self):
+    def _get_position_interval(self):
         top_left = [self.x, self.y]
         bottom_right = [self.x + self.width, self.y + self.height]
         return top_left, bottom_right
+    
+    def did_player_collide(self, player_interval):
+        spacebro_interval = self._get_position_interval()
+        if (spacebro_interval[0][0] <= player_interval[0][0] and spacebro_interval[1][0] >= player_interval[0][0]) or (spacebro_interval[0][0] <= player_interval[1][0] and spacebro_interval[1][0] >= player_interval[1][0]):
+            if (spacebro_interval[0][1] <= player_interval[0][1] and spacebro_interval[1][1] >= player_interval[0][1]):
+                return True
+        return False

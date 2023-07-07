@@ -28,18 +28,6 @@ class Game():
     def move_right(self):
         self.level.isStepUp("right", self.level.player)
 
-    def pause():
-        pass
-
-    def displayPause(self):
-        pass
-
-    def removePauseDisplay(self):
-        pass
-
-    def resume(self):
-        pass
-
     def start(self):
         self.started = True
 
@@ -58,7 +46,7 @@ class Game():
                     self.pressed_up = True
                 elif event.key == pg.K_DOWN:
                     self.climb_down()
-                if event.key == pg.K_SPACE: # TODO: Change after programming the jump method
+                if event.key == pg.K_SPACE:
                     if not self.level.is_not_on_platform(self.level.player):
                         self.jump_tick = tick
                         self.jump()
@@ -77,10 +65,6 @@ class Game():
             font_to_use = pg.font.SysFont('arial', 50)
             text_surface = font_to_use.render('Press any key to start.', False, (255, 255, 255))
             screen.blit(text_surface, (0,0))
-
-        # Checking if the player is in the air if True then player falls
-        if self.level.is_not_on_platform(self.level.player):
-            self.level.player.fall()
         
         # Objects fall control
         self.level.object_falling()
@@ -93,7 +77,7 @@ class Game():
         if self.pressed_up and not self.jumping:
             self.climb_up()
         if self.jumping:
-            self.level.player.jump()
+            self.level.jump()
             if tick - self.jump_tick == 58:
                 self.jumping = False
         
@@ -134,6 +118,3 @@ class Game():
         self.level.draw_obstacles(screen)
         if self.started and not self.game_over and not self.won:
             self.level.draw_animated_instances(screen, frame)
-
-    def _set_tick_speed(self):
-        pass
